@@ -5,6 +5,8 @@ public class PlayerInput : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Movement movement;
+    private Health health;
+    private PlayerManager pm;
     private CameraControl playerCamera;
 
     [SerializeField] SpriteRenderer sprite;
@@ -48,6 +50,24 @@ public class PlayerInput : MonoBehaviour
         {
             Debug.Log("No Camera Script Attached");
         }
+
+        if(TryGetComponent<Health>(out health))
+        {
+            Debug.Log("Health Script is Attached");
+        }
+        else
+        {
+            Debug.Log("No Health Script Attached");
+        }
+
+        if(TryGetComponent<PlayerManager>(out pm))
+        {
+            Debug.Log("PlayerManager Script is Attached");
+        }
+        else
+        {
+            Debug.Log("No PlayerManager Script Attached");
+        }
     }
 
     void FixedUpdate()
@@ -59,11 +79,11 @@ public class PlayerInput : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         horMoveDirection = context.ReadValue<Vector2>().x;
-        if(horMoveDirection == 1)
+        if(horMoveDirection == 1 && pm.getMovementEnabled() == true)
         {
             sprite.flipX = false;
         }
-        if(horMoveDirection == -1)
+        if(horMoveDirection == -1 && pm.getMovementEnabled() == true)
         {
             sprite.flipX = true;
         }
@@ -103,7 +123,10 @@ public class PlayerInput : MonoBehaviour
 
             int attackIndex = movement.anim.GetInteger("AttackIndex");
             attackIndex = (attackIndex + 1) % 3; 
+            GetComponent<AudioSource>().Play();
             movement.anim.SetInteger("AttackIndex", attackIndex);
+
+            pm.hit();
 
             Debug.Log("OnAttack is performed");
         }
