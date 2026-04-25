@@ -1,14 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class Health : MonoBehaviour
 {
     public int maxHealth = 10;
     private int currentHealth;
+
+    public float deathDuration = 0.25f;
+
+
+
     void Start()
     {
         currentHealth = maxHealth;
     }
+
+
+
 
     public void TakeDamage(int damage)
     {
@@ -17,7 +26,7 @@ public class Health : MonoBehaviour
         {
             Die();
         }
-        else if (gameObject.CompareTag("Player"))
+        else if (gameObject.CompareTag("Player") || gameObject.CompareTag("Enemy"))
         {
             gameObject.GetComponent<Animator>().SetTrigger("IsHit");
         }
@@ -46,16 +55,19 @@ public class Health : MonoBehaviour
         else if (gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Enemy Died");
-            Destroy(gameObject);
+            gameObject.GetComponent<Animator>().SetTrigger("IsHit");
         }
     }
 
+
+    /* --------------- HELPERS FUNCTION --------------- */
     public int GetCurrentHealth()
     {
         return currentHealth;
     }
 
-
-
-
+    private IEnumerator deathRoutine()
+    {
+        yield return new WaitForSeconds(deathDuration);
+    }
 }

@@ -6,6 +6,7 @@ public class UIController : MonoBehaviour
 
     [Header("Player Health")]
     public TextMeshProUGUI healthBar;
+    public RectTransform healthBarUI;
 
     private void Start() {
         if(player == null)
@@ -20,5 +21,6 @@ public class UIController : MonoBehaviour
     }
     private void Update() {
         healthBar.text = $"Health: {player.GetComponent<Health>().GetCurrentHealth()}";
+        healthBarUI.sizeDelta = new Vector2((player.GetComponent<Health>().GetCurrentHealth() * 20) - 3, healthBarUI.sizeDelta.y); // Adjust the multiplier as needed for visual scaling
     }
 }

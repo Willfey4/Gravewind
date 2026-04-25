@@ -9,8 +9,6 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float cameraHeight = 3;
     [SerializeField] float cameraSmoothTime = 1;
 
-    
-    // Camera variables
     private Vector3 cameraVelocity = Vector3.zero;
 
     public void Look(Vector3 lookOffset) 
