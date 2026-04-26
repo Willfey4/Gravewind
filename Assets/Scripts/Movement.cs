@@ -3,37 +3,36 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private bool playingFootstep = false;
+    public float footstepDelay = 0.5f;
+
+
 
     [Header("Movement Variables")]
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float jumpPower = 15;
     public float jumpCutMultiplier = 0.5f;
 
+
     [Header("Grounding")]
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Transform groundCheck;
     [SerializeField] Vector2 groundingHitbox;
 
+
     [Header("Wall Checker")]
     [SerializeField] Transform wallCheck;
     [SerializeField] Vector2 WallCheckHitbox;
 
+
     [Header("Animator")]
     public Animator anim;
 
-    private bool playingFootstep = false;
-    public float footstepDelay = 0.5f;
+
 
     private void Awake()
     {
-        if(TryGetComponent<Rigidbody2D>(out rb))
-            {
-                Debug.Log("Rigidbody2D Script is Attached");
-            }
-            else
-            {
-                Debug.Log("No Rigidbody2D Script Attached");
-            }
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update() {
@@ -50,7 +49,6 @@ public class Movement : MonoBehaviour
         anim.SetFloat("Horizontal", Mathf.Abs(horMoveDirection));
         anim.SetBool("IsRunning", horMoveDirection != 0);
         
-
         rb.linearVelocity = new Vector2 (horMoveDirection * moveSpeed, rb.linearVelocity.y);
         if (horMoveDirection != 0 && IsGrounded() && !playingFootstep)
         {
@@ -65,7 +63,7 @@ public class Movement : MonoBehaviour
     public void Jump()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower); 
-        AudioManager.Instance.PlayRandomAudioClip(gameObject.GetComponent<PlayerManager>().jumpSounds, transform);
+        AudioManager.Instance.PlayRandomAudioClip(gameObject.GetComponent<PlayerManager>().jumpSounds, transform, .5f);
         anim.SetBool("IsJumping", true);     
     }
 
@@ -90,6 +88,7 @@ public class Movement : MonoBehaviour
         return Physics2D.OverlapBox(wallCheck.position, WallCheckHitbox, 0, groundLayer);
     }
 
+
     /* --------------- Footstep SFX --------------- */
     private void StartPlayingFootstep()
     {
@@ -105,6 +104,6 @@ public class Movement : MonoBehaviour
 
     private void PlayFootstep()
     {
-        AudioManager.Instance.PlayRandomAudioClip(gameObject.GetComponent<PlayerManager>().footstepSounds, transform);
+        AudioManager.Instance.PlayRandomAudioClip(gameObject.GetComponent<PlayerManager>().footstepSounds, transform, .5f);
     }
 }

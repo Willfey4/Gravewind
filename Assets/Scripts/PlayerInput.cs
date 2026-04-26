@@ -9,7 +9,12 @@ public class PlayerInput : MonoBehaviour
     private Health health;
     private PlayerManager pm;
     private CameraControl playerCamera;
+
+    private float horMoveDirection;
+    private bool jumpTrue; 
+    private Vector3 lookOffset;
  
+
     [SerializeField] SpriteRenderer sprite;
  
     [Header("Look")]
@@ -17,9 +22,7 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Pause")]
     [SerializeField] GameObject pauseMenu;
-    float horMoveDirection;
-    bool jumpTrue; 
-    Vector3 lookOffset;
+    
  
 
     
@@ -50,18 +53,16 @@ public class PlayerInput : MonoBehaviour
     {
         horMoveDirection = context.ReadValue<Vector2>().x;
  
-        if (horMoveDirection == 1 && pm.getMovementEnabled() == true)
+        if (horMoveDirection == 1 && pm.getMovementEnabled() == true) //flip right
         {
-            sprite.flipX = false;       // filp sprite to face right
-            pm.SetFacingRight(true);    // sync hitbox to face right
+            sprite.flipX = false;
+            pm.SetFacingRight(true);
         }
-        if (horMoveDirection == -1 && pm.getMovementEnabled() == true)
+        if (horMoveDirection == -1 && pm.getMovementEnabled() == true) //flip left
         {
-            sprite.flipX = true;        // flip sprite to face left
-            pm.SetFacingRight(false);   // sync hitbox to face left
+            sprite.flipX = true;
+            pm.SetFacingRight(false);
         }
- 
-        Debug.Log("OnMove is called");
     }
  
     public void OnJump(InputAction.CallbackContext context)

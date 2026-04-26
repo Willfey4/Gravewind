@@ -4,6 +4,8 @@ using TMPro;
 
 public class DamageItem : MonoBehaviour
 {
+    private bool isActivated = false;
+    
     [SerializeField] int damageAmount = 2;
     [SerializeField] float range = 1f;
     [SerializeField] LayerMask playerLayer;
@@ -12,7 +14,7 @@ public class DamageItem : MonoBehaviour
     [TextArea(2, 5)]
     [SerializeField] private string message = "Enter message";
     [SerializeField] private TextMeshProUGUI messageText;
-    private bool isActivated = false;
+    
 
 
     private void Update()

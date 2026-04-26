@@ -6,9 +6,7 @@ public class Health : MonoBehaviour
 {
     public int maxHealth = 10;
     private int currentHealth;
-
     public float deathDuration = 0.25f;
-
 
 
     void Start()
@@ -26,11 +24,11 @@ public class Health : MonoBehaviour
         {
             Die();
         }
-        else if (gameObject.CompareTag("Player") || gameObject.CompareTag("Enemy"))
+        else if (gameObject.CompareTag("Player") || gameObject.CompareTag("Enemy") || gameObject.CompareTag("Boss"))
         {
             gameObject.GetComponent<Animator>().SetTrigger("IsHit");
             if (gameObject.CompareTag("Player")) AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<PlayerManager>().hurtSound, transform);
-            else if (gameObject.CompareTag("Enemy")) AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().hurtSound, transform);
+            else if (gameObject.CompareTag("Enemy") || gameObject.CompareTag("Boss")) AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().hurtSound, transform);
         }
     }
 
@@ -55,11 +53,15 @@ public class Health : MonoBehaviour
             gameObject.GetComponent<PlayerManager>().setIsDead(true);
         }
 
-        else if (gameObject.CompareTag("Enemy"))
+        else if (gameObject.CompareTag("Enemy") || gameObject.CompareTag("Boss"))
         {
             Debug.Log("Enemy Died");
             AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().deathSound, transform, .5f);
             gameObject.GetComponent<Animator>().SetTrigger("IsHit");
+            if (gameObject.CompareTag("Boss"))
+            {
+                StartCoroutine(bossDeathRoutine());
+            }
         }
     }
 
@@ -73,5 +75,15 @@ public class Health : MonoBehaviour
     private IEnumerator deathRoutine()
     {
         yield return new WaitForSeconds(deathDuration);
+    }
+
+
+    private IEnumerator bossDeathRoutine()
+    {
+        yield return new WaitForSeconds(3f);
+        Time.timeScale = 0f;
+        PlayerManager pm = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
+        pm.pauseMenuUI.SetActive(true);
+        pm.messageText.text = "Game completed! Congratulations!";
     }
 }

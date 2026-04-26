@@ -3,9 +3,18 @@ using UnityEngine;
  
 public class MeleeEnemy : MonoBehaviour
 {
+    private EnemyManager em;
+    private Animator anim;
+    private enum State { Patrolling, Chasing, Attacking }
+    private State currentState = State.Patrolling;
+    private float attackTimer = 0f;
+
+
+    
     [Header("Chase")]
     [SerializeField] float chaseSpeed = 3.5f;
     
+
     [Header("Melee Attack")]
     [SerializeField] Transform attackHitbox;
     [SerializeField] Vector2 attackHitboxSize = new Vector2(0.8f, 0.8f);
@@ -13,18 +22,13 @@ public class MeleeEnemy : MonoBehaviour
     [SerializeField] float attackCooldown = 1.2f;
     [SerializeField] float attackRange = 0.9f;
  
+
     [Header("Attack Knockback")]
     [SerializeField] Vector2 knockbackForce = new Vector2(4f, 3f);
  
  
-    // ── Private ────────────────────────────────────────────────────────────
-    private enum State { Patrolling, Chasing, Attacking }
-    private State currentState = State.Patrolling;
- 
-    private EnemyManager em;
-    private Animator anim;
-    private float attackTimer = 0f;
- 
+  
+  
     private void Awake()
     {
         em = GetComponent<EnemyManager>();
@@ -36,16 +40,6 @@ public class MeleeEnemy : MonoBehaviour
         if (em.isDead) return;
  
         attackTimer -= Time.deltaTime;
- 
-        // If hurt, flip to face the player (hit from behind) then resume
-        if (em.isHurt)
-        {
-            em.StopHorizontal();
-            anim.SetBool("IsWalking", false);
-            if (em.player != null) 
-                em.FacePlayer();
-            return;
-        }
 
         switch (currentState)
         {
@@ -55,8 +49,8 @@ public class MeleeEnemy : MonoBehaviour
         }
     }
  
+
     /* --------------- Enemy State Updates --------------- */
- 
     private void UpdatePatrol()
     {
         anim.SetBool("IsRunning", false);
@@ -113,9 +107,10 @@ public class MeleeEnemy : MonoBehaviour
     {
         attackTimer = attackCooldown;
         anim.SetBool("IsAttacking", true);
-        AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().attackSound, transform);
- 
-        yield return new WaitForSeconds(2f);
+        
+        yield return new WaitForSeconds(.75f);
+        AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().attackSound, transform, .2f);
+        
  
         if (attackHitbox != null)
         {

@@ -3,13 +3,22 @@ using System.Collections;
 
 public class EnemyManager : MonoBehaviour
 {
+    private Rigidbody2D rb;
+    private SpriteRenderer sprite;
+    private Health health;
+    private bool playingMove = false;
+    [HideInInspector] public bool facingRight = true;
+    [HideInInspector] public Transform player;      // non-null when player is detected
+    [HideInInspector] public bool isDead = false;
+    [HideInInspector] public bool isHurt = false;
+
+
     [Header("Contact Damage and Knockback")]
     public int damageAmount = 1;
     [SerializeField] Vector2 knockbackForce = new Vector2(4f, 3f);
  
 
     [Header("Patrol")]
-    [Tooltip("Leave both null to make the enemy stand still.")]
     public Transform leftPatrolPoint;
     public Transform rightPatrolPoint;
     public float patrolSpeed = 2f;
@@ -25,25 +34,15 @@ public class EnemyManager : MonoBehaviour
     [Header("Hurt State")]
     [SerializeField] float hurtDuration = 0.25f;
 
+
     [Header("Sound Effects")]
-    private bool playingMove = false;
+    public float volume = .02f;
     public float moveDelay = 0.5f;
     public AudioClip hurtSound;
     public AudioClip deathSound;
     public AudioClip attackSound;
     public AudioClip[] moveSounds;
  
-
-    
-    [HideInInspector] public bool facingRight = true;
-    [HideInInspector] public Transform player;      // non-null when player is detected
-    [HideInInspector] public bool isDead = false;
-    [HideInInspector] public bool isHurt = false;
- 
-    
-    private Rigidbody2D rb;
-    private SpriteRenderer sprite;
-    private Health health;
 
  
 
@@ -56,7 +55,11 @@ public class EnemyManager : MonoBehaviour
  
     private void Update()
     {
-        if (isDead) return;
+        if (isDead) 
+        {
+            StopPlayingMove(); 
+            return;
+        }
  
         if (health.GetCurrentHealth() <= 0)
         {
@@ -84,14 +87,12 @@ public class EnemyManager : MonoBehaviour
         if (facingRight)
         {
             SetVelocityX(patrolSpeed);
-            if (transform.position.x >= rightPatrolPoint.position.x)
-                Flip();
+            if (transform.position.x >= rightPatrolPoint.position.x) Flip();
         }
         else
         {
             SetVelocityX(-patrolSpeed);
-            if (transform.position.x <= leftPatrolPoint.position.x)
-                Flip();
+            if (transform.position.x <= leftPatrolPoint.position.x) Flip();
         }
     }
 
@@ -252,7 +253,7 @@ public class EnemyManager : MonoBehaviour
 
     private void PlayMove()
     {
-        AudioManager.Instance.PlayRandomAudioClip(moveSounds, transform, .02f);
+        AudioManager.Instance.PlayRandomAudioClip(moveSounds, transform, volume);
     }
  
     

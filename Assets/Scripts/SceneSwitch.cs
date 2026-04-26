@@ -28,6 +28,6 @@ public class SceneSwitch : MonoBehaviour
 
     private IEnumerator DelayedSceneSwitch()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
     }
 }

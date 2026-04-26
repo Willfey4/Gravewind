@@ -3,28 +3,30 @@ using UnityEngine;
 
 public class FlyingEnemy : MonoBehaviour
 {
-    [Header("Float")]
-    [SerializeField] float bobAmplitude = 0.3f;
-    [SerializeField] float bobFrequency = 1.5f;
- 
-    [Header("Swoop Attack")]
-    [SerializeField] float swoopDiveSpeed = 6f;
-    [SerializeField] float swoopRetreatSpeed = 4f;
-    [Tooltip("World-space Y to return to after swooping. Match your patrol points' height.")]
-    [SerializeField] float retreatHeight = 5f;
-    [SerializeField] float swoopCooldown = 2.5f;
-    [SerializeField] LayerMask groundLayer;
- 
- 
-    private enum State { Patrolling, Hovering, Swooping, Retreating }
-    private State currentState = State.Patrolling;
- 
     private EnemyManager em;
     private Animator anim;
     private Rigidbody2D rb;
     private float swoopTimer = 0f;
     private float bobTimer = 0f;
     private bool hitPlayerThisSwoop = false;
+    private enum State { Patrolling, Hovering, Swooping, Retreating }
+    private State currentState = State.Patrolling;
+    
+    
+    [Header("Float")]
+    [SerializeField] float bobAmplitude = 0.3f;
+    [SerializeField] float bobFrequency = 1.5f;
+ 
+
+    [Header("Swoop Attack")]
+    [SerializeField] float swoopDiveSpeed = 6f;
+    [SerializeField] float swoopRetreatSpeed = 4f;
+    [SerializeField] float retreatHeight = 5f;
+    [SerializeField] float swoopCooldown = 2.5f;
+    [SerializeField] LayerMask groundLayer;
+ 
+ 
+    
  
     private void Awake()
     {
@@ -47,20 +49,11 @@ public class FlyingEnemy : MonoBehaviour
         {
             case State.Patrolling: UpdatePatrol(); break;
             case State.Hovering:   UpdateHover();  break;
-            // Swooping and Retreating are driven by coroutines
         }
     }
+
  
-    // ── Collision — triggers retreat if we hit the player mid-swoop ───────
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (currentState == State.Swooping && other.gameObject.CompareTag("Player"))
-        {
-            hitPlayerThisSwoop = true;
-        }
-    }
- 
-    // ── States ────────────────────────────────────────────────────────────
+    /* --------------- Enemy States --------------- */
  
     private void UpdatePatrol()
     {
@@ -94,7 +87,14 @@ public class FlyingEnemy : MonoBehaviour
             StartCoroutine(PerformSwoop());
     }
  
-    // ── Swoop ─────────────────────────────────────────────────────────────
+    /* --------------- Swoop & Collision FUNCTION --------------- */
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (currentState == State.Swooping && other.gameObject.CompareTag("Player"))
+        {
+            hitPlayerThisSwoop = true;
+        }
+    }
  
     private IEnumerator PerformSwoop()
     {
@@ -144,7 +144,7 @@ public class FlyingEnemy : MonoBehaviour
         currentState = em.player != null ? State.Hovering : State.Patrolling;
     }
  
-    // ── Gizmos ────────────────────────────────────────────────────────────
+    /* --------------- Gizmos --------------- */
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;

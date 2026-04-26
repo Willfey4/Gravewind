@@ -226,6 +226,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   hurtDuration: 0.25
+  volume: 0.02
   moveDelay: 0.5
   hurtSound: {fileID: 8300000, guid: c2926d8800565a2478c75f8d5bba9c31, type: 3}
   deathSound: {fileID: 8300000, guid: 5605f1fa623bfd84ba717af501871e3e, type: 3}
@@ -248,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a22665edd93d8499506f633bd46329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 3
+  maxHealth: 5
   deathDuration: 0.25
 --- !u!114 &9110277403368866133
 MonoBehaviour:

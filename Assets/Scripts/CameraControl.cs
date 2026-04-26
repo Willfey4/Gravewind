@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
+    private Vector3 cameraVelocity = Vector3.zero;
+
+    
     [Header("Camera")]
     [SerializeField] Transform cameraTransform;
     [SerializeField] Rigidbody2D cameraTarget;
@@ -9,8 +12,7 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float cameraHeight = 3;
     [SerializeField] float cameraSmoothTime = 1;
 
-    private Vector3 cameraVelocity = Vector3.zero;
-
+    
     public void Look(Vector3 lookOffset) 
     {
         Vector3 targetPosition = new Vector3(cameraTarget.position.x, cameraTarget.position.y + cameraHeight, cameraZoom) + lookOffset;

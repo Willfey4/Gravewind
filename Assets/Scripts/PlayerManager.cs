@@ -1,13 +1,17 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
     private bool isDead = false;
     private bool movementEnabled = true;
     private bool isHurt = false;
+    private bool isFacingRight = true;   // kept in sync by PlayerInput
+    private float attackTimer = 0f;
 
  
+
     [Header("Player Attack")]
     public int damageAmount = 1;
     [SerializeField] Vector2 knockbackForce = new Vector2(4f, 3f);
@@ -16,8 +20,7 @@ public class PlayerManager : MonoBehaviour
  
     [Header("Attack Cooldown")]
     [SerializeField] float attackCooldown = 0.4f;   // minimum time between attacks
-    private float attackTimer = 0f;
-    private bool isFacingRight = true;   // kept in sync by PlayerInput
+    
 
     [Header("Abilities")]
     [SerializeField] bool wallJumpUnlocked = false;
@@ -34,15 +37,29 @@ public class PlayerManager : MonoBehaviour
     public AudioClip[] jumpSounds;
 
 
+    [Header("Pause Menu")]
+    public GameObject pauseMenuUI;
+    public TextMeshProUGUI messageText;
+
+
     private void Update()
     {
+        if (isDead) {
+            messageText.text = "Game Over!";
+            Time.timeScale = 0f;
+            pauseMenuUI.SetActive(true);
+            return; 
+        }
+
         if (attackTimer > 0f)
+        {
             attackTimer -= Time.deltaTime;
+        }
     }
  
 
  
-    public void SetFacingRight(bool facingRight) // Fixest attack hitbox direction when player changes facing direction
+    public void SetFacingRight(bool facingRight) //flips attack hitbox based on player direction
     {
         if (isFacingRight == facingRight) return; // no change, skip
         isFacingRight = facingRight;
@@ -72,6 +89,7 @@ public class PlayerManager : MonoBehaviour
  
         foreach (Collider2D enemy in hitEnemies)
         {
+            if (!enemy.CompareTag("Enemy") && !enemy.CompareTag("Boss")) continue; // only damage enemies
             Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
             if (enemyRb != null)
             {
@@ -86,7 +104,6 @@ public class PlayerManager : MonoBehaviour
                 if (em != null) em.TriggerHurt();
             }
             break;
-            
         }
     }
 
