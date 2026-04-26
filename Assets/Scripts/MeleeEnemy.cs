@@ -113,6 +113,7 @@ public class MeleeEnemy : MonoBehaviour
     {
         attackTimer = attackCooldown;
         anim.SetBool("IsAttacking", true);
+        AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().attackSound, transform);
  
         yield return new WaitForSeconds(2f);
  

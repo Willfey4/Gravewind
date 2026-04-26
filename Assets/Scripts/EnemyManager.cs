@@ -24,6 +24,14 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Hurt State")]
     [SerializeField] float hurtDuration = 0.25f;
+
+    [Header("Sound Effects")]
+    private bool playingMove = false;
+    public float moveDelay = 0.5f;
+    public AudioClip hurtSound;
+    public AudioClip deathSound;
+    public AudioClip attackSound;
+    public AudioClip[] moveSounds;
  
 
     
@@ -54,6 +62,15 @@ public class EnemyManager : MonoBehaviour
         {
             HandleDeath();
             return;
+        }
+        
+        if (rb.linearVelocity.x != 0f && !playingMove)
+        {
+            StartPlayingMove();
+        }
+        else if (rb.linearVelocity.x == 0f && playingMove)
+        {
+            StopPlayingMove();
         }
     }
 
@@ -107,7 +124,7 @@ public class EnemyManager : MonoBehaviour
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, detectionRange, playerLayer);
  
-        if (hit != null)
+        if (hit != null && hit.CompareTag("Player"))
         {
             player = hit.transform;
             return true;
@@ -189,6 +206,7 @@ public class EnemyManager : MonoBehaviour
  
         StopAllCoroutines();
         rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = 3f;
         GetComponent<Collider2D>().enabled = false; 
     }
 
@@ -215,6 +233,26 @@ public class EnemyManager : MonoBehaviour
             PlayerManager pm = other.gameObject.GetComponent<PlayerManager>();
             if (pm != null) pm.TriggerHurt();
         }
+    }
+
+    /* --------------- Movement SFX --------------- */
+
+    private void StartPlayingMove()
+    {
+        if (moveSounds == null || moveSounds.Length == 0) return;
+        playingMove = true;
+        InvokeRepeating(nameof(PlayMove), 0f, moveDelay);
+    }
+
+    private void StopPlayingMove()
+    {
+        playingMove = false;
+        CancelInvoke(nameof(PlayMove));
+    }
+
+    private void PlayMove()
+    {
+        AudioManager.Instance.PlayRandomAudioClip(moveSounds, transform, .02f);
     }
  
     

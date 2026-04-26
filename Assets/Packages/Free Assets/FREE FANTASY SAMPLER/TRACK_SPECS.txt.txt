@@ -1,0 +1,17 @@
+============================================================
+MIDNIGHT CALM STUDIOS | TRACK SPECIFICATIONS
+Pack: Free Fantasy Sampler
+============================================================
+
+ID  | TRACK NAME                       | ENVIRONMENT         | BPM
+--------------------------------------------------------------------
+01  | Woodlands Green Light Festival   | Exploration         | 57
+02  | Echoes In The Hollow Temple      | Ruins               | 109
+03  | Emerald Caves                    | Caves               | 123
+04  | Freedom Pass                     | Mountain Highlands  | 114
+05  | Spring Shield                    | Mystic Meadows      | 60
+
+------------------------------------------------------------
+TECHNICAL DETAILS:
+Format: MP3 (320kbps) | Stereo | 44.1kHz
+============================================================

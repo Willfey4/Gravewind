@@ -26,6 +26,14 @@ public class PlayerManager : MonoBehaviour
     [Header("Hurt State")]
     [SerializeField] float hurtDuration = 1f;
 
+    [Header("Sound Effects")]
+    public AudioClip[] attackSounds;
+    public AudioClip hurtSound;
+    public AudioClip[] footstepSounds;
+    public AudioClip deathSound;
+    public AudioClip[] jumpSounds;
+
+
     private void Update()
     {
         if (attackTimer > 0f)
@@ -58,6 +66,7 @@ public class PlayerManager : MonoBehaviour
     {
         // Reset cooldown on each attack
         attackTimer = attackCooldown;
+        AudioManager.Instance.PlayRandomAudioClip(attackSounds, transform);
  
         Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackHitbox.position, attackHitbox.localScale, 0f);
  

@@ -29,6 +29,8 @@ public class Health : MonoBehaviour
         else if (gameObject.CompareTag("Player") || gameObject.CompareTag("Enemy"))
         {
             gameObject.GetComponent<Animator>().SetTrigger("IsHit");
+            if (gameObject.CompareTag("Player")) AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<PlayerManager>().hurtSound, transform);
+            else if (gameObject.CompareTag("Enemy")) AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().hurtSound, transform);
         }
     }
 
@@ -49,12 +51,14 @@ public class Health : MonoBehaviour
             Debug.Log("Player Died");
             gameObject.GetComponent<Animator>().SetBool("IsAlive", false);
             gameObject.GetComponent<PlayerInput>().enabled = false;
+            AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<PlayerManager>().deathSound, transform);
             gameObject.GetComponent<PlayerManager>().setIsDead(true);
         }
 
         else if (gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Enemy Died");
+            AudioManager.Instance.PlayAudioClip(gameObject.GetComponent<EnemyManager>().deathSound, transform, .5f);
             gameObject.GetComponent<Animator>().SetTrigger("IsHit");
         }
     }

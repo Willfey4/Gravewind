@@ -21,6 +21,9 @@ public class Movement : MonoBehaviour
     [Header("Animator")]
     public Animator anim;
 
+    private bool playingFootstep = false;
+    public float footstepDelay = 0.5f;
+
     private void Awake()
     {
         if(TryGetComponent<Rigidbody2D>(out rb))
@@ -33,26 +36,36 @@ public class Movement : MonoBehaviour
             }
     }
 
-private void Update() {
-    if (rb.linearVelocity.y < -0.1f)
-    {
-        anim.SetBool("IsFalling", true);
-        anim.SetBool("IsJumping", false);
+    private void Update() {
+        if (rb.linearVelocity.y < -0.1f)
+        {
+            anim.SetBool("IsFalling", true);
+            anim.SetBool("IsJumping", false);
+        }
     }
-}
 
     public void Move(float horMoveDirection)
     {
         Debug.Log(horMoveDirection);
         anim.SetFloat("Horizontal", Mathf.Abs(horMoveDirection));
         anim.SetBool("IsRunning", horMoveDirection != 0);
+        
 
         rb.linearVelocity = new Vector2 (horMoveDirection * moveSpeed, rb.linearVelocity.y);
+        if (horMoveDirection != 0 && IsGrounded() && !playingFootstep)
+        {
+            StartPlayingFootstep();
+        }
+        else if (horMoveDirection == 0 || !IsGrounded())
+        {
+            StopPlayingFootstep();
+        }
     }
 
     public void Jump()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);  
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower); 
+        AudioManager.Instance.PlayRandomAudioClip(gameObject.GetComponent<PlayerManager>().jumpSounds, transform);
         anim.SetBool("IsJumping", true);     
     }
 
@@ -77,4 +90,21 @@ private void Update() {
         return Physics2D.OverlapBox(wallCheck.position, WallCheckHitbox, 0, groundLayer);
     }
 
+    /* --------------- Footstep SFX --------------- */
+    private void StartPlayingFootstep()
+    {
+        playingFootstep = true;
+        InvokeRepeating(nameof(PlayFootstep), 0f, footstepDelay);
+    }
+
+    private void StopPlayingFootstep()
+    {
+        playingFootstep = false;
+        CancelInvoke(nameof(PlayFootstep));
+    }
+
+    private void PlayFootstep()
+    {
+        AudioManager.Instance.PlayRandomAudioClip(gameObject.GetComponent<PlayerManager>().footstepSounds, transform);
+    }
 }

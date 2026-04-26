@@ -132,3 +132,6 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 1
+  pickUpSound: {fileID: 8300000, guid: 2453a083bb842ab45804d0cccf8ea7e6, type: 3}
+  message: Damage Increased
+  messageText: {fileID: 0}

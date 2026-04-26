@@ -18,8 +18,7 @@ public class PlayerInput : MonoBehaviour
     [Header("Pause")]
     [SerializeField] GameObject pauseMenu;
     float horMoveDirection;
-    bool jumpTrue;
- 
+    bool jumpTrue; 
     Vector3 lookOffset;
  
 
@@ -104,7 +103,6 @@ public class PlayerInput : MonoBehaviour
             // Cycle through attack animations by incrementing the AttackIndex parameter
             int attackIndex = movement.anim.GetInteger("AttackIndex");
             attackIndex = (attackIndex + 1) % 3;
-            GetComponent<AudioSource>().Play();
             movement.anim.SetInteger("AttackIndex", attackIndex);
  
             pm.hit();

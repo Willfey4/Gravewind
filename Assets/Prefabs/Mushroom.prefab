@@ -228,6 +228,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   hurtDuration: 0.3
+  moveDelay: 0.5
+  hurtSound: {fileID: 8300000, guid: bb45ebc1c3b634542a240f089bcc8ad2, type: 3}
+  deathSound: {fileID: 8300000, guid: 5605f1fa623bfd84ba717af501871e3e, type: 3}
+  attackSound: {fileID: 0}
+  moveSounds:
+  - {fileID: 8300000, guid: b753318c4de9e434a820d117a8e71721, type: 3}
+  - {fileID: 8300000, guid: 7ee19914fb13fc245aae864f2f138b81, type: 3}
+  - {fileID: 8300000, guid: 7e4959d436b3ed947b315c7eaf180d0a, type: 3}
+  - {fileID: 8300000, guid: dcbebabb82327144c88d884b3b23aee9, type: 3}
   facingRight: 1
   player: {fileID: 0}
   isDead: 0
@@ -264,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 3
+  deathDuration: 0.25
 --- !u!95 &589282457152448462
 Animator:
   serializedVersion: 7
